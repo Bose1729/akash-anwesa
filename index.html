@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .heart-title {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .question {
+            font-size: 36px;
+            color: #764ba2;
+            margin-bottom: 40px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 80px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 15px 40px;
+            position: relative;
+            z-index: 5;
+        }
+
+        #yesBtn:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            position: absolute;
+            z-index: 10;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #noBtn:hover {
+            background: linear-gradient(135deg, #44a08d, #4ecdc4);
+        }
+
+        .flower {
+            position: fixed;
+            pointer-events: none;
+            font-size: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .celebration-content {
+            text-align: center;
+            position: relative;
+            z-index: 1001;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .thank-you {
+            font-size: 48px;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration-gif {
+            max-width: 500px;
+            max-height: 500px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .cry-animation {
+            animation: cry 0.5s ease-in-out;
+        }
+
+        @keyframes cry {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .tear {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            animation: tear-fall 1s ease-in forwards;
+        }
+
+        @keyframes tear-fall {
+            to {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart-title">💝</div>
+        <div class="question">Akash tumi amar valentine hobe?</div>
+        <div class="button-container">
+            <button id="yesBtn">Yes ❤️</button>
+            <button id="noBtn">No 💔</button>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        let yesScale = 1;
+        let noClickCount = 0;
+
+        // No button runs away when you try to click it
+        document.addEventListener('mousemove', (e) => {
+            const rect = noBtn.getBoundingClientRect();
+            const btnCenterX = rect.left + rect.width / 2;
+            const btnCenterY = rect.top + rect.height / 2;
+            const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+
+            if (distance < 150) {
+                const randomX = (Math.random() - 0.5) * 300;
+                const randomY = (Math.random() - 0.5) * 300;
+                noBtn.style.left = (50 + randomX / window.innerWidth * 100) + '%';
+                noBtn.style.top = (50 + randomY / window.innerHeight * 100) + '%';
+            }
+        });
+
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            noClickCount++;
+
+            // Create tears
+            for (let i = 0; i < 3; i++) {
+                const tear = document.createElement('div');
+                tear.className = 'tear';
+                tear.style.left = (Math.random() * 100) + 'px';
+                tear.style.top = (Math.random() * 50) + 'px';
+                noBtn.appendChild(tear);
+            }
+
+            // Cry animation
+            noBtn.classList.add('cry-animation');
+            setTimeout(() => {
+                noBtn.classList.remove('cry-animation');
+            }, 500);
+
+            // Grow Yes button
+            yesScale += 0.3;
+            yesBtn.style.transform = `scale(${yesScale})`;
+            yesBtn.style.padding = `${15 * yesScale}px ${40 * yesScale}px`;
+            yesBtn.style.fontSize = `${18 * yesScale}px`;
+        });
+
+        yesBtn.addEventListener('click', () => {
+            // Show celebration
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.innerHTML = `
+                <div class="celebration-content">
+                    <div class="thank-you">THANK YOU! 💕</div>
+                    <img src="celebration.gif" alt="Celebration" class="celebration-gif" id="celebrationGif">
+                </div>
+            `;
+            document.body.appendChild(celebration);
+
+            // Create flowers
+            createFlowerRain();
+
+            // Play song
+            playSong();
+
+            // Hide original container
+            document.querySelector('.container').style.display = 'none';
+        });
+
+        function createFlowerRain() {
+            const flowers = ['🌹', '🌺', '🌸', '🌼', '🌻', '💐', '🌷'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const flower = document.createElement('div');
+                    flower.className = 'flower';
+                    flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                    flower.style.left = Math.random() * window.innerWidth + 'px';
+                    flower.style.top = '-50px';
+                    flower.style.animation = `fall ${3 + Math.random() * 2}s linear forwards`;
+                    document.body.appendChild(flower);
+                    
+                    setTimeout(() => flower.remove(), 5000);
+                }, i * 100);
+            }
+        }
+
+        function playSong() {
+            const audio = new Audio('song.mp3');
+            audio.play().catch(e => console.log('Song playback failed:', e));
+        }
+    </script>
+</body>
+</html>
